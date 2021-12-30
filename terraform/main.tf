@@ -169,6 +169,34 @@ resource "google_cloud_run_service" "worker" {
   autogenerate_revision_name = true
 }
 
+locals {
+  worker_url = google_cloud_run_service.worker.status[0].url
+}
+
+resource "google_cloud_run_service" "migration-worker" {
+  name     = "gcp-rails-migration-worker"
+  location = "asia-northeast1"
+  template {
+    spec {
+      containers {
+        image = "asia-northeast1-docker.pkg.dev/rails-test-336417/tf-gcp-rails/app:${var.image_sha}"
+        env {
+          name = "RAILS_LOG_TO_STDOUT"
+          value = "1"
+        }
+      }
+    }
+    metadata {
+      annotations = {
+        "autoscaling.knative.dev/maxScale" = "100"
+        "run.googleapis.com/vpc-access-connector" = google_vpc_access_connector.vpc_connector.name
+        "run.googleapis.com/vpc-access-egress"    = "private-ranges-only"
+      }
+    }
+  }
+  autogenerate_revision_name = true
+}
+
 
 data "google_iam_policy" "noauth" {
   binding {

@@ -21,5 +21,6 @@ $ terraformer import google --projects=$GOOGLE_CLOUD_PROJECT --resources=network
 ```
 $ terraform apply -auto-approve -var="image_sha=$(git rev-parse --short HEAD)"
 $ terraform apply -auto-approve -var="image_sha=$IMAGE_SHA"
-$ terraform apply -auto-approve -var="image_sha=$IMAGE_SHA" -var="force=1"
+$ terraform apply -auto-approve -var="image_sha=$IMAGE_SHA"
+$ terraform plan -var="image_sha=$IMAGE_SHA"  -target="google_cloud_run_service.migration-worker"  -target="google_cloud_run_service.worker" -target="google_cloud_run_service.app"
 ```
