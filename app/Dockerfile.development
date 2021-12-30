@@ -1,0 +1,26 @@
+FROM ruby:3.0.2
+
+ENV APP_ROOT /var/lib/app
+WORKDIR $APP_ROOT
+
+ENV LANG C.UTF-8
+ENV LANGUAGE=en_US:
+ENV PS1 "\[\e[31m\][\[\e[m\]\[\e[38;5;172m\]\u\[\e[m\]@\[\e[38;5;153m\]\h\[\e[m\] \[\e[38;5;214m\]\w\[\e[m\]\[\e[31m\]]\[\e[m\]\\$ "
+ENV RAILS_ROOT $APP_ROOT
+
+RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
+    apt-get install -y npm \
+                       vim \
+                       default-mysql-client \
+                       build-essential \
+                       --no-install-recommends && \
+    npm install -g n && \
+    apt-get --purge remove -y npm && \
+    rm -rf /var/lib/apt/lists/*
+
+RUN n 16.9.1
+RUN npm install -g yarn
+RUN npm install -g redoc-cli
+
+RUN gem install git-pr-release -v '1.9.0'
+RUN curl -L https://git.io/misspell | sh && mv ./bin/misspell /usr/local/bin/

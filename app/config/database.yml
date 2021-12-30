@@ -1,0 +1,26 @@
+default: &default
+  adapter: mysql2
+  host:      <%= ENV['DATABASE_HOST'] %>
+  database:  <%= ENV['DATABASE_NAME'] %>
+  username:  <%= ENV['DATABASE_USERNAME'] %>
+  password:  <%= ENV['DATABASE_PASSWORD'] %>
+  encoding:  utf8mb4
+  charset:   utf8mb4
+  collation: utf8mb4_unicode_520_ci
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  port: <%= ENV['DATABASE_PORT'] || 3306 %>
+
+development:
+  <<: *default
+
+test:
+  <<: *default
+  host: <%= ENV['TEST_DATABASE_HOST'] || '127.0.0.1' %>
+  username: app
+  password: app
+  database: app_test
+
+production:
+  <<: *default
+  pool:      15
+  timeout:   5000

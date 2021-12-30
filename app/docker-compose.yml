@@ -1,0 +1,116 @@
+version: '3'
+
+services:
+  redis:
+    image: redis:5
+
+  mailcatcher:
+    image: schickling/mailcatcher
+    ports:
+      - '61080:1080'
+
+  mysql-development:
+    image: mysql:5.7
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+      MYSQL_USER: app
+      MYSQL_PASSWORD: app
+      MYSQL_DATABASE: app_development
+      TZ: UTC
+    ports:
+      - '13306:3306'
+    volumes:
+      - mysql-development-data:/var/lib/mysql:cached
+      - ./mysql5.7:/etc/mysql/conf.d:cached
+
+  mysql-test:
+    image: mysql:5.7
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+      MYSQL_USER: app
+      MYSQL_PASSWORD: app
+      MYSQL_DATABASE: app_test
+      TZ: UTC
+    expose:
+      - '3306'
+    volumes:
+      - mysql-test-data:/var/lib/mysql:cached
+      - ./mysql5.7:/etc/mysql/conf.d:cached
+
+  app:
+    tty: true
+    stdin_open: true
+    cpu_quota: 80000
+    environment:
+      HOST: http://app.localhost:13000
+      APP_ENV: development
+      DISABLE_SPRING: 1
+      DATABASE_HOST: mysql-development
+      DATABASE_NAME: app_development
+      TEST_DATABASE_HOST: mysql-test
+      REDIS_URL: redis://redis:6379
+      HISTFILE: /var/lib/app/log/sh_history
+      BUNDLE_JOBS: 4
+      BUNDLE_PATH: /var/lib/app/vendor/bundle
+      BUNDLE_GEMFILE: /var/lib/app/Gemfile
+      SMTP_ADDRESS: mailcatcher
+      SMTP_PORT: 1025
+      MAILER_DELIVERY_METHOD: smtp
+      SELENIUM_DRIVER_URL: http://chrome:4444/wd/hub
+    build:
+      context: .
+      dockerfile: Dockerfile.development
+    command: bin/server
+    ports:
+      - '13000:3000'
+      - '8080:8080'
+    volumes:
+      - .:/var/lib/app:cached
+      - bundle-data:/var/lib/app/vendor/bundle:cached
+      - tmp-data:/var/lib/app/tmp:cached
+      - packs-data:/var/lib/app/public/packs:cached
+      - packs-test-data:/var/lib/app/public/packs-test:cached
+      - node_modules-data:/var/lib/app/node_modules:cached
+      - log-data:/var/lib/app/log:cached
+      # exclude volumes
+      - /var/lib/app/.git
+
+    dns:
+      - 8.8.8.8
+      - 8.8.8.4
+    links:
+      - mysql-test
+      - mysql-development
+      - mailcatcher
+      - redis
+      - chrome
+    networks:
+      default:
+        aliases:
+          - app.localhost
+          - app.com
+
+  chrome:
+    image: selenium/standalone-chrome:latest
+    ports:
+      - 4444:4444
+    logging:
+      driver: none
+
+volumes:
+  mysql-development-data:
+    driver: local
+  mysql-test-data:
+    driver: local
+  bundle-data:
+    driver: local
+  tmp-data:
+    driver: local
+  node_modules-data:
+    driver: local
+  log-data:
+    driver: local
+  packs-data:
+    driver: local
+  packs-test-data:
+    driver: local

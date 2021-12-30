@@ -1,0 +1,13 @@
+#!/bin/sh
+set -eo pipefail
+
+PROJECT_NAME=$(basename $(cd $(dirname $0)/../..;pwd))
+DOCKER_PS_NAME=${PROJECT_NAME}_app
+DOCKER_PS_ID=`docker ps -f name=${DOCKER_PS_NAME} -q`
+
+if [ -z "$DOCKER_PS_ID" ]; then
+  # --no-deps などを渡せる
+  docker-compose -f docker-compose.yml `\`dirname $0\`/pass_docker_compose_env` run --rm --service-ports --use-aliases $* app bash
+else
+  docker exec -it $DOCKER_PS_ID bash
+fi

@@ -1,0 +1,57 @@
+source 'https://rubygems.org'
+git_source(:github) { |repo| "https://github.com/#{repo}.git" }
+
+ruby '3.0.2'
+
+#gem 'asset_sync'
+gem 'bcrypt'
+gem 'bootsnap', '>= 1.4.4', require: false
+gem 'cloudtasker'
+gem 'config'
+gem 'enumerize'
+gem 'hashie'
+gem 'jbuilder', '~> 2.7'
+gem 'jwt'
+gem 'letter_opener'
+gem 'mysql2'
+gem 'puma', '~> 5.0'
+gem 'rack-cors'
+gem 'rack-proxy'
+gem 'rack-timeout', require: 'rack/timeout/base'
+gem 'rails', '~> 6.1.4', '>= 6.1.4.1'
+gem 'rambulance'
+gem 'ridgepole'
+gem 'sassc'
+gem 'tailwindcss-rails'
+gem 'webpacker'
+gem 'tzinfo-data', platforms: %i(mingw mswin x64_mingw jruby)
+
+group :development, :test do
+  gem 'bullet'
+  gem 'byebug', platforms: %i(mri mingw x64_mingw)
+  gem 'factory_bot_rails'
+  gem 'ffaker'
+  gem 'ordinare', require: false
+  gem 'pry-byebug'
+  gem 'rspec-rails'
+  gem 'rubocop', require: false
+  gem 'rubocop-faker'
+  gem 'rubocop-performance', require: false
+  gem 'rubocop-rails', require: false
+end
+
+group :development do
+  gem 'foreman'
+  gem 'listen', '~> 3.3'
+  gem 'rack-mini-profiler', '~> 2.0'
+  gem 'spring'
+  gem 'web-console', '>= 4.1.0'
+end
+
+group :test do
+  gem 'capybara'
+  gem 'database_rewinder'
+  gem 'guard-rspec'
+  gem 'selenium-webdriver'
+  gem 'simplecov'
+end
