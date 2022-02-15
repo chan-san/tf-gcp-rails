@@ -189,3 +189,15 @@ resource "google_cloud_run_service_iam_policy" "noauth" {
 
   policy_data = data.google_iam_policy.noauth.policy_data
 }
+
+resource "google_storage_bucket" "assets" {
+  name          = "tf-gcp-rails--assets"
+  location      = "ASIA-NORTHEAST1"
+}
+
+resource "google_compute_backend_bucket" "image_backend" {
+  name        = "image-backend-bucket"
+  description = "Contains beautiful images"
+  bucket_name = google_storage_bucket.assets.name
+  enable_cdn  = true
+}

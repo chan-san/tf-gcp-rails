@@ -15,6 +15,7 @@ $ export TF_VAR_github_repo="your-github-repo"
 
 ## TF
 https://registry.terraform.io/providers/hashicorp/google/latest/docs
+https://cloud.google.com/blog/ja/products/serverless/serverless-load-balancing-terraform-hard-way
 
 ## MEMO
 ```
