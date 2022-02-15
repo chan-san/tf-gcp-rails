@@ -2,7 +2,7 @@ locals {
   params = {
     count_up = {
       body = "test"
-      cron  = "* * * * *"
+      cron  = "5 13 * * *"
     }
   }
 }

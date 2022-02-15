@@ -84,7 +84,7 @@ resource "google_sql_database_instance" "instance" {
     tier = "db-f1-micro"
     availability_type = "REGIONAL"
     ip_configuration {
-      ipv4_enabled    = false
+      ipv4_enabled    = true
       private_network = google_compute_network.private_network.id
     }
     backup_configuration {
@@ -117,19 +117,19 @@ resource "google_cloud_run_service" "app" {
   name     = "gcp-rails"
   location = "asia-northeast1"
   template {
-    spec {
-      containers {
-        image = "asia-northeast1-docker.pkg.dev/rails-test-336417/tf-gcp-rails/app:${var.image_sha}"
-        env {
-          name = "RAILS_SERVE_STATIC_FILES"
-          value = "1"
-        }
-        env {
-          name = "RAILS_LOG_TO_STDOUT"
-          value = "1"
-        }
-      }
-    }
+    // spec {
+    //   containers {
+    //     image = "asia-northeast1-docker.pkg.dev/rails-test-336417/tf-gcp-rails/app:${var.image_sha}"
+    //     env {
+    //       name = "RAILS_SERVE_STATIC_FILES"
+    //       value = "1"
+    //     }
+    //     env {
+    //       name = "RAILS_LOG_TO_STDOUT"
+    //       value = "1"
+    //     }
+    //   }
+    // }
     metadata {
       //name = "gcp-rails-v${local.deployment_version}"
       
@@ -141,22 +141,22 @@ resource "google_cloud_run_service" "app" {
       }
     }
   }
-  autogenerate_revision_name = true
+  // autogenerate_revision_name = true
 }
 
 resource "google_cloud_run_service" "worker" {
   name     = "gcp-rails-worker"
   location = "asia-northeast1"
   template {
-    spec {
-      containers {
-        image = "asia-northeast1-docker.pkg.dev/rails-test-336417/tf-gcp-rails/app:${var.image_sha}"
-        env {
-          name = "RAILS_LOG_TO_STDOUT"
-          value = "1"
-        }
-      }
-    }
+    // spec {
+    //   containers {
+    //     image = "asia-northeast1-docker.pkg.dev/rails-test-336417/tf-gcp-rails/app:${var.image_sha}"
+    //     env {
+    //       name = "RAILS_LOG_TO_STDOUT"
+    //       value = "1"
+    //     }
+    //   }
+    // }
     metadata {
       annotations = {
         "autoscaling.knative.dev/maxScale" = "100"
@@ -166,37 +166,12 @@ resource "google_cloud_run_service" "worker" {
       }
     }
   }
-  autogenerate_revision_name = true
+  // autogenerate_revision_name = true
 }
 
 locals {
   worker_url = google_cloud_run_service.worker.status[0].url
 }
-
-resource "google_cloud_run_service" "migration-worker" {
-  name     = "gcp-rails-migration-worker"
-  location = "asia-northeast1"
-  template {
-    spec {
-      containers {
-        image = "asia-northeast1-docker.pkg.dev/rails-test-336417/tf-gcp-rails/app:${var.image_sha}"
-        env {
-          name = "RAILS_LOG_TO_STDOUT"
-          value = "1"
-        }
-      }
-    }
-    metadata {
-      annotations = {
-        "autoscaling.knative.dev/maxScale" = "100"
-        "run.googleapis.com/vpc-access-connector" = google_vpc_access_connector.vpc_connector.name
-        "run.googleapis.com/vpc-access-egress"    = "private-ranges-only"
-      }
-    }
-  }
-  autogenerate_revision_name = true
-}
-
 
 data "google_iam_policy" "noauth" {
   binding {
