@@ -13,10 +13,13 @@ terraform {
 
 provider "google" {
   project = var.project_id
-  region  = "asia-northeast1"
+  region  = var.location
 }
 
 provider "google-beta" {
   project = var.project_id
-  region  = "asia-northeast1"
+  region  = var.location
+}
+
+data "google_project" "project" {
 }

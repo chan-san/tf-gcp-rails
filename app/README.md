@@ -1,24 +1,11 @@
-# README
+# Sampleアプリ
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+- gcloud auth configure-docker asia-northeast1-docker.pkg.dev  
 
-Things you may want to cover:
-
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+```
+docker build -t tf-gcp-rails .
+IMAGE_ID=`docker images tf-gcp-rails -q`
+docker tag tf-gcp-rails asia-northeast1-docker.pkg.dev/$GOOGLE_CLOUD_PROJECT/tf-gcp-rails/rails:$IMAGE_ID
+docker push asia-northeast1-docker.pkg.dev/$GOOGLE_CLOUD_PROJECT/tf-gcp-rails/rails:$IMAGE_ID
+docker rmi tf-gcp-rails asia-northeast1-docker.pkg.dev/$GOOGLE_CLOUD_PROJECT/tf-gcp-rails/rails:$IMAGE_ID
+```
