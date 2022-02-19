@@ -56,6 +56,7 @@ module "cloud_run" {
   repository_path = module.artifact_registry.repository_path
   image_sha       = var.image_sha
   force           = var.force
+  app_account     = module.service_account.app_account
 }
 
 module "cloud_scheduler" {

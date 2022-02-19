@@ -10,6 +10,7 @@ resource "google_cloud_run_service" "app" {
   location = var.location
   template {
     spec {
+      service_account_name = var.app_account.email
       containers {
         image = local.image
         env {
@@ -39,6 +40,7 @@ resource "google_cloud_run_service" "worker" {
   location = var.location
   template {
     spec {
+      service_account_name = var.app_account.email
       containers {
         image = local.image
         env {
