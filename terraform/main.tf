@@ -40,6 +40,7 @@ module "storage" {
   source   = "./modules/storage"
   env      = var.env
   location = var.location
+  project  = var.project_id
 }
 
 module "load_balancing" {

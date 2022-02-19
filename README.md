@@ -33,3 +33,8 @@ $ terraform plan -var="image_sha=$IMAGE_SHA"  -target="google_cloud_run_service.
 $ terraform import module.foo.aws_instance.bar i-abcd1234
 $ terraform mv hoge.aaa module.foo.hoge.aaa
 ```
+
+バックエンドをGCSに持っていくとき
+```
+$ terraform init --backend-config="bucket=terraform-state--${GOOGLE_CLOUD_PROJECT}"
+```

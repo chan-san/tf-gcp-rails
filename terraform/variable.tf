@@ -7,8 +7,6 @@ variable "location" {
   type    = string
   default = "asia-northeast1"
 }
-variable "github_owner" {}
-variable "github_repo" {}
 variable "force" {
   type    = string
   default = ""
@@ -18,6 +16,7 @@ variable "image_sha" {
   default = "latest"
 }
 
+data "google_project" "project" {}
 data "google_client_config" "this" {}
 
 locals {
