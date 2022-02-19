@@ -59,9 +59,9 @@ module "cloud_run" {
 }
 
 module "cloud_scheduler" {
-  source = "./modules/cloud_scheduler"
-  env    = var.env
-  region = module.app_engine.app.location_id
-  worker_url = module.cloud_run.worker_url
+  source      = "./modules/cloud_scheduler"
+  env         = var.env
+  region      = module.app_engine.app.location_id
+  worker_url  = module.cloud_run.worker_url
   run_account = module.cloud_run.run_account
 }
