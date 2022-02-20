@@ -40,5 +40,4 @@ USER rails
 
 RUN bundle exec rake assets:precompile
 
-CMD bundle exec puma
-
+CMD bundle exec rake db:migrate && bundle exec puma

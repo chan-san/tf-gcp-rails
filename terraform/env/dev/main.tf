@@ -23,6 +23,12 @@ module "networking" {
   servicenetworking = module.google_project_service.servicenetworking
 }
 
+module "secrets" {
+  source   = "../../modules/secrets"
+  env      = var.env
+  location = var.location
+}
+
 module "artifact_registry" {
   source             = "../../modules/artifact_registry"
   env                = var.env
@@ -67,6 +73,7 @@ module "cloud_run" {
   force           = var.force
   app_account     = module.service_account.app_account
   cloud_sql_vpc_connector = module.networking.cloud_sql_vpc_connector
+  secrets = module.secrets.items
 }
 
 module "cloud_scheduler" {

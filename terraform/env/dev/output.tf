@@ -12,3 +12,7 @@ output "google_client_config" {
 output "cloud_sql" {
   value = module.cloud_sql
 }
+
+output "secret" {
+  value = module.secrets.items
+}

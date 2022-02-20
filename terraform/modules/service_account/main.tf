@@ -11,3 +11,13 @@ resource "google_service_account" "app_account" {
   account_id   = "app-account"
   display_name = "App Account"
 }
+
+resource "google_project_iam_member" "app_account_secretAccessor" {
+  role    = "roles/secretmanager.secretAccessor"
+  member  = "serviceAccount:${google_service_account.app_account.email}"
+}
+// 複数付与する場合
+// resource "google_project_iam_member" "app_account_editor" {
+//   role    = "roles/editor"
+//   member  = "serviceAccount:${google_service_account.app_account.email}"
+// }
