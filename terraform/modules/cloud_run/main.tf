@@ -21,15 +21,41 @@ resource "google_cloud_run_service" "app" {
           name  = "RAILS_LOG_TO_STDOUT"
           value = "1"
         }
-        // env {
-        //   name = "DATABASE_NAME"
-        //   value_from {
-        //     secret_key_ref {
-        //       name = var.secrets.DATABASE_NAME.secret_id
-        //       key = "latest"
-        //     }
-        //   }
-        // }
+        env {
+          name = "DATABASE_HOST"
+          value = var.cloud_sql_private_ip_address
+        }
+        env {
+          name = "DATABASE_COLLATION"
+          value = "utf8mb4_bin"
+        }
+        env {
+          name = "DATABASE_NAME"
+          value_from {
+            secret_key_ref {
+              name = var.secrets.DATABASE_NAME.secret_id
+              key = "latest"
+            }
+          }
+        }
+        env {
+          name = "DATABASE_USERNAME"
+          value_from {
+            secret_key_ref {
+              name = var.secrets.DATABASE_USERNAME.secret_id
+              key = "latest"
+            }
+          }
+        }
+        env {
+          name = "DATABASE_PASSWORD"
+          value_from {
+            secret_key_ref {
+              name = var.secrets.DATABASE_PASSWORD.secret_id
+              key = "latest"
+            }
+          }
+        }
       }
     }
     metadata {

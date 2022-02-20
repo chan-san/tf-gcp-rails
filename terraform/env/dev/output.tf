@@ -9,10 +9,10 @@ output "google_client_config" {
   }
 }
 
-output "cloud_sql" {
-  value = module.cloud_sql
-}
-
 output "secret" {
   value = module.secrets.items
+}
+
+output "zz" {
+  value = module.cloud_sql.instance.private_ip_address
 }

@@ -38,3 +38,8 @@ $ terraform mv hoge.aaa module.foo.hoge.aaa
 ```
 $ terraform init --backend-config="bucket=terraform-state--${GOOGLE_CLOUD_PROJECT}"
 ```
+
+Cloud SQL(パブリック)に接続する
+```
+$ cloud_sql_proxy -instances=${GOOGLE_CLOUD_PROJECT}:asia-northeast1:xxxx=tcp:55506
+```

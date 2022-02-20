@@ -14,6 +14,7 @@ module "service_account" {
   source   = "../../modules/service_account"
   env      = var.env
   location = var.location
+  project = var.project_id
 }
 
 module "networking" {
@@ -73,6 +74,7 @@ module "cloud_run" {
   force           = var.force
   app_account     = module.service_account.app_account
   cloud_sql_vpc_connector = module.networking.cloud_sql_vpc_connector
+  cloud_sql_private_ip_address = module.cloud_sql.instance.private_ip_address
   secrets = module.secrets.items
 }
 

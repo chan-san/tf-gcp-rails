@@ -13,6 +13,7 @@ resource "google_service_account" "app_account" {
 }
 
 resource "google_project_iam_member" "app_account_secretAccessor" {
+  project = var.project
   role    = "roles/secretmanager.secretAccessor"
   member  = "serviceAccount:${google_service_account.app_account.email}"
 }
