@@ -29,6 +29,8 @@ resource "google_cloud_run_service" "app" {
       annotations = {
         "autoscaling.knative.dev/maxScale" = "100"
         // "autoscaling.knative.dev/minScale" = "4"
+        "run.googleapis.com/vpc-access-connector" = var.cloud_sql_vpc_connector.name
+        "run.googleapis.com/vpc-access-egress"    = "private-ranges-only"
       }
     }
   }
@@ -53,6 +55,8 @@ resource "google_cloud_run_service" "worker" {
       annotations = {
         "autoscaling.knative.dev/maxScale" = "100"
         // "autoscaling.knative.dev/minScale" = "4"
+        "run.googleapis.com/vpc-access-connector" = var.cloud_sql_vpc_connector.name
+        "run.googleapis.com/vpc-access-egress"    = "private-ranges-only"
       }
     }
   }

@@ -4,5 +4,7 @@ Rails.application.routes.draw do
   get 'background_tasks/:name', to: 'background_tasks#action'
   post 'background_tasks/:name', to: 'background_tasks#action'
 
+  resources :tests, only: %i(index show)
+
   root 'landings#show'
 end

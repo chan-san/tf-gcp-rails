@@ -1,7 +1,7 @@
-output "hoge1" {
+output "instance" {
   value = google_sql_database_instance.instance
 }
 
-output "hoge2" {
+output "database" {
   value = google_sql_database.database
 }

@@ -1,0 +1,5 @@
+<ul class="list-disc">
+  <% @tests.each do |test| %>
+    <li><%= link_to "#{test.id}: #{test.value}", test %></li>
+  <% end %>
+</ul>

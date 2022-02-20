@@ -18,8 +18,3 @@ variable "image_sha" {
 
 data "google_project" "project" {}
 data "google_client_config" "this" {}
-
-locals {
-  region  = data.google_client_config.this.region
-  project = data.google_client_config.this.project
-}
