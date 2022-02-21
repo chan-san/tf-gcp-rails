@@ -55,7 +55,6 @@ module "cloud_sql" {
   tier     = "db-f1-micro"
   private_vpc_connection = module.networking.cloud_sql_private_vpc_connection
   service_name = var.service_name
-  secrets = module.secrets.items
 }
 
 module "storage" {
