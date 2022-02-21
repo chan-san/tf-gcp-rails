@@ -1,5 +1,5 @@
 resource "google_sql_database_instance" "instance" {
-  name             = var.service_name
+  name             = "${var.service_name}-${var.env}"
   database_version = "MYSQL_5_7"
   depends_on = [var.private_vpc_connection]
 

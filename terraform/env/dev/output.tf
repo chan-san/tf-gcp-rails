@@ -8,7 +8,3 @@ output "google_client_config" {
     project = data.google_client_config.this.project
   }
 }
-
-output "secret" {
-  value = module.secrets.items
-}

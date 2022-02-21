@@ -6,3 +6,4 @@ variable "tier" {
   default = "db-f1-micro"
 }
 variable "service_name" {}
+variable "secrets" {}
