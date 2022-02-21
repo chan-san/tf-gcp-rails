@@ -22,3 +22,10 @@ resource "google_project_iam_member" "app_account_secretAccessor" {
 //   role    = "roles/editor"
 //   member  = "serviceAccount:${google_service_account.app_account.email}"
 // }
+
+
+# CloudRunを実行するサービスアカウント
+resource "google_service_account" "run_invoker_account" {
+  account_id   = "cloud-run-invoker-sa"
+  display_name = "Cloud Run Invoker Service Account"
+}

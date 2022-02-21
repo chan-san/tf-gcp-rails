@@ -36,7 +36,7 @@ resource "google_cloud_scheduler_job" "job" {
 
     oidc_token {
       audience              = var.worker_url
-      service_account_email = var.run_account
+      service_account_email = var.run_invoker_account.email
     }
   }
 }

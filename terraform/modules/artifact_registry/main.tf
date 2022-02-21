@@ -6,8 +6,6 @@ resource "google_artifact_registry_repository" "app" {
   description   = "docker repository with iam"
   format        = "DOCKER"
 
-  depends_on = [var.artifactregistry]
-
   // https://console.cloud.google.com/artifacts/settings
   // Turn on Vulnerability-Checking on console.
 }

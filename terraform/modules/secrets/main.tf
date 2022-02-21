@@ -4,8 +4,6 @@ resource "google_secret_manager_secret" "DATABASE_NAME" {
   replication {
     automatic = true
   }
-
-  depends_on = [var.secretmanager]
 }
 
 resource "google_secret_manager_secret" "DATABASE_USERNAME" {

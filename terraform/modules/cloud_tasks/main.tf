@@ -13,6 +13,4 @@ resource "google_cloud_tasks_queue" "advanced_configuration" {
   stackdriver_logging_config {
     sampling_ratio = 0.2
   }
-
-  depends_on = [var.google_project_service]
 }
