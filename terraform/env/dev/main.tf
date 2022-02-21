@@ -22,12 +22,14 @@ module "networking" {
   env      = var.env
   location = var.location
   servicenetworking = module.google_project_service.servicenetworking
+  compute = module.google_project_service.compute
 }
 
 module "secrets" {
   source   = "../../modules/secrets"
   env      = var.env
   location = var.location
+  secretmanager = module.google_project_service.secretmanager
 }
 
 module "artifact_registry" {
@@ -35,6 +37,8 @@ module "artifact_registry" {
   env                = var.env
   location           = var.location
   deployment_account = module.service_account.deployment_account
+  artifactregistry = module.google_project_service.artifactregistry
+  service_name = var.service_name
 }
 
 module "cloud_tasks" {
@@ -48,7 +52,9 @@ module "cloud_sql" {
   source   = "../../modules/cloud_sql"
   env      = var.env
   location = var.location
+  tier     = "db-f1-micro"
   private_vpc_connection = module.networking.cloud_sql_private_vpc_connection
+  service_name = var.service_name
 }
 
 module "storage" {
@@ -56,6 +62,7 @@ module "storage" {
   env      = var.env
   location = var.location
   project  = var.project_id
+  service_name = var.service_name
 }
 
 module "load_balancing" {
@@ -63,6 +70,7 @@ module "load_balancing" {
   env                = var.env
   location           = var.location
   bucket_name_assets = module.storage.assets.name
+  compute = module.google_project_service.compute
 }
 
 module "cloud_run" {

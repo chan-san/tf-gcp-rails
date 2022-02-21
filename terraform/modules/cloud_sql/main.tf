@@ -1,10 +1,10 @@
 resource "google_sql_database_instance" "instance" {
-  name             = "tf-gcp-rails"
+  name             = var.service_name
   database_version = "MYSQL_5_7"
   depends_on = [var.private_vpc_connection]
 
   settings {
-    tier              = "db-f1-micro"
+    tier              = var.tier
     availability_type = "REGIONAL"
     ip_configuration {
       ipv4_enabled = true

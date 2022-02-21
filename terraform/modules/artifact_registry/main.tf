@@ -2,9 +2,11 @@ resource "google_artifact_registry_repository" "app" {
   provider = google-beta
 
   location      = var.location
-  repository_id = "tf-gcp-rails"
+  repository_id = var.service_name
   description   = "docker repository with iam"
   format        = "DOCKER"
+
+  depends_on = [var.artifactregistry]
 
   // https://console.cloud.google.com/artifacts/settings
   // Turn on Vulnerability-Checking on console.

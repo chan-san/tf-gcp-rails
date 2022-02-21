@@ -12,7 +12,3 @@ output "google_client_config" {
 output "secret" {
   value = module.secrets.items
 }
-
-output "zz" {
-  value = module.cloud_sql.instance.private_ip_address
-}

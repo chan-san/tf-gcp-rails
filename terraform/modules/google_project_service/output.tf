@@ -4,3 +4,12 @@ output "cloud_tasks" {
 output "servicenetworking" {
   value = google_project_service.servicenetworking
 }
+output "compute" {
+  value = google_project_service.compute
+}
+output "secretmanager" {
+  value = google_project_service.secretmanager
+}
+output "artifactregistry" {
+  value = google_project_service.artifactregistry
+}

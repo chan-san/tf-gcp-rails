@@ -64,7 +64,7 @@ resource "google_cloud_run_service" "app" {
       annotations = {
         "autoscaling.knative.dev/maxScale" = "100"
         // "autoscaling.knative.dev/minScale" = "4"
-        "run.googleapis.com/vpc-access-connector" = var.cloud_sql_vpc_connector.name
+        "run.googleapis.com/vpc-access-connector" = var.cloud_sql_vpc_connector.id
         "run.googleapis.com/vpc-access-egress"    = "private-ranges-only"
       }
     }
@@ -81,8 +81,47 @@ resource "google_cloud_run_service" "worker" {
       containers {
         image = local.image
         env {
+          name  = "RAILS_SERVE_STATIC_FILES"
+          value = "1"
+        }
+        env {
           name  = "RAILS_LOG_TO_STDOUT"
           value = "1"
+        }
+        env {
+          name = "DATABASE_HOST"
+          value = var.cloud_sql_private_ip_address
+        }
+        env {
+          name = "DATABASE_COLLATION"
+          value = "utf8mb4_bin"
+        }
+        env {
+          name = "DATABASE_NAME"
+          value_from {
+            secret_key_ref {
+              name = var.secrets.DATABASE_NAME.secret_id
+              key = "latest"
+            }
+          }
+        }
+        env {
+          name = "DATABASE_USERNAME"
+          value_from {
+            secret_key_ref {
+              name = var.secrets.DATABASE_USERNAME.secret_id
+              key = "latest"
+            }
+          }
+        }
+        env {
+          name = "DATABASE_PASSWORD"
+          value_from {
+            secret_key_ref {
+              name = var.secrets.DATABASE_PASSWORD.secret_id
+              key = "latest"
+            }
+          }
         }
       }
     }
@@ -90,7 +129,7 @@ resource "google_cloud_run_service" "worker" {
       annotations = {
         "autoscaling.knative.dev/maxScale" = "100"
         // "autoscaling.knative.dev/minScale" = "4"
-        "run.googleapis.com/vpc-access-connector" = var.cloud_sql_vpc_connector.name
+        "run.googleapis.com/vpc-access-connector" = var.cloud_sql_vpc_connector.id
         "run.googleapis.com/vpc-access-egress"    = "private-ranges-only"
       }
     }

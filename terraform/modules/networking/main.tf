@@ -1,5 +1,7 @@
 resource "google_compute_network" "cloud_sql_private" {
   name = "cloud-sql-private"
+
+  depends_on = [var.compute]
 }
 
 resource "google_compute_global_address" "cloud_sql_private_ip_address" {

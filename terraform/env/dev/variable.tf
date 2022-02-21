@@ -3,6 +3,10 @@ variable "env" {
   default = "dev"
 }
 variable "project_id" {}
+variable "service_name" {
+  type = string
+  default = ""
+}
 variable "location" {
   type    = string
   default = "asia-northeast1"

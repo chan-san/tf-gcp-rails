@@ -1,5 +1,5 @@
 resource "google_storage_bucket" "assets" {
-  name     = "tf-gcp-rails--assets--123456"
+  name     = "${var.service_name}-${var.env}-assets"
   location = var.location
 }
 
