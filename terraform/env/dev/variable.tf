@@ -4,7 +4,7 @@ variable "env" {
 }
 variable "project_id" {}
 variable "service_name" {
-  type = string
+  type    = string
   default = ""
 }
 variable "location" {

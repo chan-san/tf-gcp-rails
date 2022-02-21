@@ -4,7 +4,7 @@ output "gcp_project" {
 
 output "google_client_config" {
   value = {
-    region = data.google_client_config.this.region
+    region  = data.google_client_config.this.region
     project = data.google_client_config.this.project
   }
 }

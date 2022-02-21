@@ -1,13 +1,13 @@
 resource "google_sql_database_instance" "instance" {
   name             = "${var.service_name}-${var.env}"
   database_version = "MYSQL_5_7"
-  depends_on = [var.private_vpc_connection]
+  depends_on       = [var.private_vpc_connection]
 
   settings {
     tier              = var.tier
     availability_type = "REGIONAL"
     ip_configuration {
-      ipv4_enabled = true
+      ipv4_enabled    = true
       private_network = var.private_vpc_connection.network
     }
     backup_configuration {

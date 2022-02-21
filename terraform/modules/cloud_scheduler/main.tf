@@ -7,7 +7,7 @@ locals {
   }
 }
 
-resource google_cloud_scheduler_job job {
+resource "google_cloud_scheduler_job" "job" {
   name             = "test-job-${each.key}"
   description      = "test http job"
   schedule         = each.value.cron

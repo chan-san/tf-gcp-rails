@@ -22,11 +22,11 @@ resource "google_cloud_run_service" "app" {
           value = "1"
         }
         env {
-          name = "DATABASE_HOST"
+          name  = "DATABASE_HOST"
           value = var.cloud_sql_private_ip_address
         }
         env {
-          name = "DATABASE_COLLATION"
+          name  = "DATABASE_COLLATION"
           value = "utf8mb4_bin"
         }
         env {
@@ -34,7 +34,7 @@ resource "google_cloud_run_service" "app" {
           value_from {
             secret_key_ref {
               name = var.secrets.DATABASE_NAME.secret_id
-              key = "latest"
+              key  = "latest"
             }
           }
         }
@@ -43,7 +43,7 @@ resource "google_cloud_run_service" "app" {
           value_from {
             secret_key_ref {
               name = var.secrets.DATABASE_USERNAME.secret_id
-              key = "latest"
+              key  = "latest"
             }
           }
         }
@@ -52,7 +52,7 @@ resource "google_cloud_run_service" "app" {
           value_from {
             secret_key_ref {
               name = var.secrets.DATABASE_PASSWORD.secret_id
-              key = "latest"
+              key  = "latest"
             }
           }
         }
@@ -89,11 +89,11 @@ resource "google_cloud_run_service" "worker" {
           value = "1"
         }
         env {
-          name = "DATABASE_HOST"
+          name  = "DATABASE_HOST"
           value = var.cloud_sql_private_ip_address
         }
         env {
-          name = "DATABASE_COLLATION"
+          name  = "DATABASE_COLLATION"
           value = "utf8mb4_bin"
         }
         env {
@@ -101,7 +101,7 @@ resource "google_cloud_run_service" "worker" {
           value_from {
             secret_key_ref {
               name = var.secrets.DATABASE_NAME.secret_id
-              key = "latest"
+              key  = "latest"
             }
           }
         }
@@ -110,7 +110,7 @@ resource "google_cloud_run_service" "worker" {
           value_from {
             secret_key_ref {
               name = var.secrets.DATABASE_USERNAME.secret_id
-              key = "latest"
+              key  = "latest"
             }
           }
         }
@@ -119,7 +119,7 @@ resource "google_cloud_run_service" "worker" {
           value_from {
             secret_key_ref {
               name = var.secrets.DATABASE_PASSWORD.secret_id
-              key = "latest"
+              key  = "latest"
             }
           }
         }
@@ -159,7 +159,7 @@ resource "google_cloud_run_service_iam_policy" "noauth" {
 }
 
 # CloudRunを実行するサービスアカウント
-resource google_service_account run_invoker {
+resource "google_service_account" "run_invoker" {
   account_id   = "cloud-run-invoker-sa"
   display_name = "Cloud Run Invoker Service Account"
 }
@@ -176,7 +176,7 @@ resource google_secret_manager_secret_iam_binding run_invoker {
 */
 
 # CloudRunを実行するためのポリシー
-data google_iam_policy invoker {
+data "google_iam_policy" "invoker" {
   binding {
     role = "roles/run.invoker"
     members = [
@@ -185,7 +185,7 @@ data google_iam_policy invoker {
   }
 }
 
-resource google_cloud_run_service_iam_policy run_policy {
+resource "google_cloud_run_service_iam_policy" "run_policy" {
   location    = google_cloud_run_service.worker.location
   service     = google_cloud_run_service.worker.name
   policy_data = data.google_iam_policy.invoker.policy_data
