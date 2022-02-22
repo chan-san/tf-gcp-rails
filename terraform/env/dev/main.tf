@@ -77,7 +77,7 @@ module "load_balancing" {
   buckets          = module.storage.buckets
   cloud_run_apps   = module.cloud_run.apps
   depends_on       = [module.google_project_service.compute]
-  use_onetime_cert = true
+  //use_onetime_cert = true
 }
 
 module "cloud_run" {

@@ -4,7 +4,7 @@ data "google_cloud_run_service" "web" {
 }
 
 locals {
-  image = var.image_sha == "" ? "${var.repository_path}rails:${var.image_sha}" : data.google_cloud_run_service.web.template[0].spec[0].containers[0].image
+  image = var.image_sha == "" ? data.google_cloud_run_service.web.template[0].spec[0].containers[0].image : "${var.repository_path}rails@sha256:${var.image_sha}"
 }
 
 resource "google_cloud_run_service" "web" {

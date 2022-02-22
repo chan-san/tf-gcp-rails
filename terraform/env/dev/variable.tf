@@ -17,7 +17,7 @@ variable "force" {
 }
 variable "image_sha" {
   type    = string
-  default = "latest"
+  default = ""
 }
 variable "domain" {
   type    = string
