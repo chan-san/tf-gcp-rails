@@ -96,3 +96,12 @@ module "cloud_scheduler" {
   worker_url          = module.cloud_run.worker_url
   run_invoker_account = module.service_account.run_invoker_account
 }
+
+module "bigquery" {
+  source       = "../../modules/bigquery"
+  env          = var.env
+  location     = var.location
+  service_name = var.service_name
+  cloud_sql    = module.cloud_sql.resource
+  depends_on   = [module.google_project_service.bigqueryconnection]
+}

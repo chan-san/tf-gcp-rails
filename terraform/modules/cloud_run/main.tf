@@ -1,8 +1,10 @@
-locals {
-  image = "${var.repository_path}rails:${var.image_sha}"
+data "google_cloud_run_service" "app" {
+  name     = "gcp-rails"
+  location = var.location
+}
 
-  timestamp          = formatdate("YYYYMMDDhhmmss", timestamp())
-  deployment_version = var.image_sha == "latest" ? local.timestamp : var.force == "1" ? "${var.image_sha}-${local.timestamp}" : var.image_sha
+locals {
+  image = var.image_sha == "" ? "${var.repository_path}rails:${var.image_sha}" : data.google_cloud_run_service.app.template[0].spec[0].containers[0].image
 }
 
 resource "google_cloud_run_service" "app" {

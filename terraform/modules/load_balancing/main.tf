@@ -4,9 +4,9 @@ resource "google_compute_backend_bucket" "assets" {
   bucket_name = var.buckets.assets.name
   enable_cdn  = true
   cdn_policy {
-    client_ttl = 86400
-    default_ttl = 86400
-    max_ttl = 31536000
+    client_ttl        = 86400
+    default_ttl       = 86400
+    max_ttl           = 31536000
     serve_while_stale = 0
   }
 }
@@ -17,9 +17,9 @@ resource "google_compute_backend_bucket" "images" {
   bucket_name = var.buckets.images.name
   enable_cdn  = true
   cdn_policy {
-    client_ttl = 86400
-    default_ttl = 86400
-    max_ttl = 31536000
+    client_ttl        = 86400
+    default_ttl       = 86400
+    max_ttl           = 31536000
     serve_while_stale = 0
   }
 }

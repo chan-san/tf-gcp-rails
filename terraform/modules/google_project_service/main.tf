@@ -75,3 +75,7 @@ resource "google_project_service" "storage-component" {
 resource "google_project_service" "storage" {
   service = "storage.googleapis.com"
 }
+
+resource "google_project_service" "bigqueryconnection" {
+  service = "bigqueryconnection.googleapis.com"
+}

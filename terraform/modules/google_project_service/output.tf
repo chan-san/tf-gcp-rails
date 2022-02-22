@@ -13,3 +13,6 @@ output "secretmanager" {
 output "artifactregistry" {
   value = google_project_service.artifactregistry
 }
+output "bigqueryconnection" {
+  value = google_project_service.bigqueryconnection
+}
