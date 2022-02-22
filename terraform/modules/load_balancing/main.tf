@@ -59,6 +59,7 @@ resource "google_compute_backend_service" "web" {
 
 resource "google_compute_url_map" "default" {
   name            = var.service_name
+  description     = var.service_name
   default_service = google_compute_backend_service.web.id
 
   host_rule {
@@ -97,18 +98,25 @@ resource "google_compute_managed_ssl_certificate" "default" {
   }
 }
 
+locals {
+  ssl_certificates = var.use_onetime_cert ? [
+    google_compute_managed_ssl_certificate.default.self_link,
+    "https://www.googleapis.com/compute/v1/projects/${var.project}/global/sslCertificates/onetime"
+  ] : [
+    google_compute_managed_ssl_certificate.default.self_link
+  ]
+}
 resource "google_compute_target_https_proxy" "default" {
   name = "${var.service_name}-https-proxy"
 
   url_map = google_compute_url_map.default.id
-  ssl_certificates = [
-    google_compute_managed_ssl_certificate.default.id
-  ]
+  ssl_certificates = local.ssl_certificates
 }
 
 // httpsリダイレクト
 resource "google_compute_url_map" "https_redirect" {
-  name = "${var.service_name}-https-redirect"
+  name        = "${var.service_name}-https-redirect"
+  description = "https redirect"
 
   default_url_redirect {
     https_redirect         = true

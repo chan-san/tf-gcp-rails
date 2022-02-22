@@ -68,14 +68,16 @@ module "storage" {
 }
 
 module "load_balancing" {
-  source         = "../../modules/load_balancing"
-  env            = var.env
-  location       = var.location
-  service_name   = var.service_name
-  domain         = var.domain
-  buckets        = module.storage.buckets
-  cloud_run_apps = module.cloud_run.apps
-  depends_on     = [module.google_project_service.compute]
+  source           = "../../modules/load_balancing"
+  env              = var.env
+  location         = var.location
+  service_name     = var.service_name
+  project          = var.project_id
+  domain           = var.domain
+  buckets          = module.storage.buckets
+  cloud_run_apps   = module.cloud_run.apps
+  depends_on       = [module.google_project_service.compute]
+  use_onetime_cert = true
 }
 
 module "cloud_run" {
