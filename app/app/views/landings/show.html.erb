@@ -9,4 +9,13 @@
       <p class="mt-2 text-gray-500">Getting a new business off the ground is a lot of hard work. Here are five ideas you can use to find your first customers.</p>
     </div>
   </div>
+  <div class="md:flex">
+    <ul>
+      <li>request.env['HTTPS']: <%= request.env['HTTPS'] %></li>
+      <li>request.env['HTTP_X_FORWARDED_SSL']: <%= request.env['HTTP_X_FORWARDED_SSL'] %></li>
+      <li>request.env['HTTP_X_FORWARDED_SCHEME']: <%= request.env['HTTP_X_FORWARDED_SCHEME'] %></li>
+      <li>request.env['HTTP_X_FORWARDED_PROTO']: <%= request.env['HTTP_X_FORWARDED_PROTO'] %></li>
+      <li>request.env["rack.url_scheme"]: <%= request.env["rack.url_scheme"] %></li>
+    </ul>
+  </div>
 </div>

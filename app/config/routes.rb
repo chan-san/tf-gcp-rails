@@ -5,6 +5,7 @@ Rails.application.routes.draw do
   post 'background_tasks/:name', to: 'background_tasks#action'
 
   resources :tests, only: %i(index show)
+  resources :users, only: %i(index)
 
   root 'landings#show'
 end
