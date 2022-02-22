@@ -24,6 +24,56 @@ resource "google_compute_backend_bucket" "images" {
   }
 }
 
+resource "google_compute_region_network_endpoint_group" "cloudrun_web_neg" {
+  provider              = google-beta
+  name                  = "${var.service_name}-web-neg"
+  network_endpoint_type = "SERVERLESS"
+  region                = var.location
+  cloud_run {
+    service = var.cloud_run_apps.web.name
+  }
+}
+
+resource "google_compute_backend_service" "web" {
+  name = "${var.service_name}-web-backend"
+
+  protocol                        = "HTTP"
+  port_name                       = "http"
+  timeout_sec                     = 30
+  connection_draining_timeout_sec = 40
+
+  backend {
+    group = google_compute_region_network_endpoint_group.cloudrun_web_neg.id
+  }
+}
+
+resource "google_compute_url_map" "main" {
+  name            = var.service_name
+  default_service = google_compute_backend_service.web.id
+
+  host_rule {
+    hosts = [
+      "assets.${var.domain}",
+    ]
+    path_matcher = "path-matcher-assets"
+  }
+  host_rule {
+    hosts = [
+      "img.${var.domain}",
+    ]
+    path_matcher = "path-matcher-images"
+  }
+
+  path_matcher {
+    default_service = google_compute_backend_bucket.assets.self_link
+    name            = "path-matcher-assets"
+  }
+  path_matcher {
+    default_service = google_compute_backend_bucket.images.self_link
+    name            = "path-matcher-images"
+  }
+}
+
 // resource "google_compute_global_forwarding_rule" "sample" {
 //   provider = google-beta
 //   name = "tf-gcp-rails2"

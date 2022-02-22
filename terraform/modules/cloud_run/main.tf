@@ -1,13 +1,13 @@
-data "google_cloud_run_service" "app" {
+data "google_cloud_run_service" "web" {
   name     = "gcp-rails"
   location = var.location
 }
 
 locals {
-  image = var.image_sha == "" ? "${var.repository_path}rails:${var.image_sha}" : data.google_cloud_run_service.app.template[0].spec[0].containers[0].image
+  image = var.image_sha == "" ? "${var.repository_path}rails:${var.image_sha}" : data.google_cloud_run_service.web.template[0].spec[0].containers[0].image
 }
 
-resource "google_cloud_run_service" "app" {
+resource "google_cloud_run_service" "web" {
   name     = "gcp-rails"
   location = var.location
   template {
@@ -153,9 +153,9 @@ data "google_iam_policy" "noauth" {
 }
 
 resource "google_cloud_run_service_iam_policy" "noauth" {
-  location = google_cloud_run_service.app.location
-  project  = google_cloud_run_service.app.project
-  service  = google_cloud_run_service.app.name
+  location = google_cloud_run_service.web.location
+  project  = google_cloud_run_service.web.project
+  service  = google_cloud_run_service.web.name
 
   policy_data = data.google_iam_policy.noauth.policy_data
 }

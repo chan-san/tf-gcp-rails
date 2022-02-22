@@ -19,6 +19,10 @@ variable "image_sha" {
   type    = string
   default = "latest"
 }
+variable "domain" {
+  type    = string
+  default = "example.com"
+}
 
 data "google_project" "project" {}
 data "google_client_config" "this" {}

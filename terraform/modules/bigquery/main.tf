@@ -12,9 +12,9 @@ resource "google_sql_user" "bigquery_user" {
 }
 
 resource "google_bigquery_connection" "connection" {
-  provider      = google-beta
-  location      = var.location
-  description   = "Cloud SQL Connection"
+  provider    = google-beta
+  location    = var.location
+  description = "Cloud SQL Connection"
   cloud_sql {
     instance_id = var.cloud_sql.instance.connection_name
     database    = var.cloud_sql.database.name
