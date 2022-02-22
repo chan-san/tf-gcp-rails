@@ -1,3 +1,13 @@
+// cf. https://cloud.google.com/blog/ja/products/serverless/serverless-load-balancing-terraform-hard-way
+
+locals {
+  domain = {
+    "default" : var.domain,
+    "assets" : "assets.${var.domain}",
+    "images" : "img.${var.domain}"
+  }
+}
+
 resource "google_compute_backend_bucket" "assets" {
   name        = var.buckets.assets.name
   description = "assets"
@@ -47,19 +57,19 @@ resource "google_compute_backend_service" "web" {
   }
 }
 
-resource "google_compute_url_map" "main" {
+resource "google_compute_url_map" "default" {
   name            = var.service_name
   default_service = google_compute_backend_service.web.id
 
   host_rule {
     hosts = [
-      "assets.${var.domain}",
+      local.domain.assets
     ]
     path_matcher = "path-matcher-assets"
   }
   host_rule {
     hosts = [
-      "img.${var.domain}",
+      local.domain.images
     ]
     path_matcher = "path-matcher-images"
   }
@@ -74,47 +84,60 @@ resource "google_compute_url_map" "main" {
   }
 }
 
-// resource "google_compute_global_forwarding_rule" "sample" {
-//   provider = google-beta
-//   name = "tf-gcp-rails2"
-//   target = "all-apis"
-// }
-
-// resource "google_compute_forwarding_rule" "tf-gcp-rails" {
-// }
-
-// resource "google_compute_global_forwarding_rule" "tf-gcp-rails" {
-// }
-
-/*
-// Forwarding rule for Regional External Load Balancing
-resource "google_compute_global_forwarding_rule" "tf-gcp-rails" {
+resource "google_compute_managed_ssl_certificate" "default" {
   provider = google-beta
-  depends_on = [google_compute_subnetwork.proxy]
-  name   = "website-forwarding-rule"
-  region = "us-central1"
 
-  ip_protocol           = "TCP"
-  load_balancing_scheme = "EXTERNAL_MANAGED"
-  port_range            = "80"
-  target                = google_compute_region_target_http_proxy.default.id
-  network               = google_compute_network.default.id
-  ip_address            = google_compute_address.default.id
-  network_tier          = "STANDARD"
+  name = "${var.service_name}-cert"
+  managed {
+    domains = [
+      local.domain.default,
+      local.domain.assets,
+      local.domain.images
+    ]
+  }
 }
 
-resource "google_compute_region_target_http_proxy" "default" {
-  provider = google-beta
+resource "google_compute_target_https_proxy" "default" {
+  name = "${var.service_name}-https-proxy"
 
-  region  = "us-central1"
-  name    = "website-proxy"
-  url_map = google_compute_region_url_map.default.id
+  url_map = google_compute_url_map.default.id
+  ssl_certificates = [
+    google_compute_managed_ssl_certificate.default.id
+  ]
 }
 
-resource "google_compute_region_url_map" "tf-gcp-rails" {
-  provider = google-beta
+// httpsリダイレクト
+resource "google_compute_url_map" "https_redirect" {
+  name = "${var.service_name}-https-redirect"
 
-  region          = "asia-northeast-1"
-  name            = "website-map"
-  //default_service = google_compute_region_backend_service.default.id
-}*/
+  default_url_redirect {
+    https_redirect         = true
+    redirect_response_code = "MOVED_PERMANENTLY_DEFAULT"
+    strip_query            = false
+  }
+}
+
+resource "google_compute_target_http_proxy" "https_redirect" {
+  name    = "${var.service_name}-http-proxy"
+  url_map = google_compute_url_map.https_redirect.id
+}
+
+resource "google_compute_global_address" "default" {
+  name = "${var.service_name}-address"
+}
+
+resource "google_compute_global_forwarding_rule" "default" {
+  name = var.service_name
+
+  target     = google_compute_target_https_proxy.default.id
+  port_range = "443"
+  ip_address = google_compute_global_address.default.address
+}
+
+resource "google_compute_global_forwarding_rule" "https_redirect" {
+  name = "${var.service_name}-https-redirect"
+
+  target     = google_compute_target_http_proxy.https_redirect.id
+  port_range = "80"
+  ip_address = google_compute_global_address.default.address
+}
