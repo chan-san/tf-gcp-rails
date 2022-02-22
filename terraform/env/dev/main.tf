@@ -68,11 +68,11 @@ module "storage" {
 }
 
 module "load_balancing" {
-  source             = "../../modules/load_balancing"
-  env                = var.env
-  location           = var.location
-  bucket_name_assets = module.storage.assets.name
-  depends_on         = [module.google_project_service.compute]
+  source     = "../../modules/load_balancing"
+  env        = var.env
+  location   = var.location
+  buckets    = module.storage.buckets
+  depends_on = [module.google_project_service.compute]
 }
 
 module "cloud_run" {

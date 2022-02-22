@@ -8,3 +8,7 @@ output "google_client_config" {
     project = data.google_client_config.this.project
   }
 }
+
+output "test" {
+  value = module.load_balancing.test
+}
