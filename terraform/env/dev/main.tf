@@ -85,7 +85,7 @@ module "cloud_run" {
   app_account                  = module.service_account.app_account
   run_invoker_account          = module.service_account.run_invoker_account
   cloud_sql_vpc_connector      = module.networking.cloud_sql_vpc_connector
-  cloud_sql_private_ip_address = module.cloud_sql.instance.private_ip_address
+  cloud_sql_private_ip_address = module.cloud_sql.resource.instance.private_ip_address
   secrets                      = module.secrets.items
 }
 
