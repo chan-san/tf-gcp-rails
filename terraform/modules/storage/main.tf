@@ -18,12 +18,12 @@ resource "google_storage_bucket" "terraform_state" {
 
 resource "google_storage_bucket_iam_member" "assets" {
   bucket = google_storage_bucket.assets.name
-  role   = "roles/storage.objectViewer"
+  role   = "roles/storage.legacyObjectReader"
   member = "allUsers"
 }
 
 resource "google_storage_bucket_iam_member" "images" {
   bucket = google_storage_bucket.images.name
-  role   = "roles/storage.objectViewer"
+  role   = "roles/storage.legacyObjectReader"
   member = "allUsers"
 }

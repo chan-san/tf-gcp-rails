@@ -5,6 +5,13 @@ resource "google_service_account" "deployment_account" {
   display_name = "Deployment Service Account"
 }
 
+resource "google_project_iam_member" "deployment_account_assets" {
+  project = var.project
+  role    = "roles/storage.objectAdmin"
+  member  = "serviceAccount:${google_service_account.deployment_account.email}"
+}
+
+
 resource "google_service_account" "app_account" {
   provider = google-beta
 
