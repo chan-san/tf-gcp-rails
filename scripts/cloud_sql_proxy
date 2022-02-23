@@ -1,0 +1,78 @@
+#!/bin/sh
+
+GCLOUD=`which gcloud`
+CLOUD_SQL_PROXY=`which cloud_sql_proxy`
+
+if [ "$GCLOUD" = "" ]; then
+  echo "
+  You should install Cloud SDK
+
+  $ brew install --cask google-cloud-sdk
+  "
+  exit
+fi
+if [ "$CLOUD_SQL_PROXY" = "" ]; then
+  echo "
+  You should install cloud_sql_proxy component
+
+  $ gcloud components install cloud_sql_proxy
+  "
+  exit
+fi
+
+if [ -n "${CLOUDSDK_ACTIVE_CONFIG_NAME}${GOOGLE_APPLICATION_CREDENTIALS}" ]; then
+  # 認証情報を自分で管理しているならチェックを飛ばす
+  GCLOUD_AUTH=1
+else  
+  GCLOUD_AUTH=`gcloud projects describe $GOOGLE_CLOUD_PROJECT 2>/dev/null`
+fi
+if [ "$GCLOUD_AUTH" = "" ]; then
+  echo "
+  You should run authentication
+
+  $ gcloud auth login
+  "
+  exit
+fi
+
+set -eo pipefail
+
+ENV=$1
+PORT=$2
+
+if [ -z "$ENV" ]; then
+  ENV=production
+elif [ "$ENV" != "production" ]; then
+  ENV=staging
+fi
+
+if [ -z "$2" ]; then
+  DATABASE_PORT=57306
+fi
+
+DATABASE_HOST=127.0.0.1
+DATABASE_NAME=`gcloud secrets versions access latest --secret DATABASE_NAME --project=$GOOGLE_CLOUD_PROJECT`
+DATABASE_USERNAME=`gcloud secrets versions access latest --secret DATABASE_USERNAME --project=$GOOGLE_CLOUD_PROJECT`
+DATABASE_PASSWORD=`gcloud secrets versions access latest --secret DATABASE_PASSWORD --project=$GOOGLE_CLOUD_PROJECT`
+
+SQL_INSTANCE="${TF_VAR_service_name}-${TF_VAR_env}"
+
+echo "
+======== Cloud SQL Proxy ========
+Here for connection information.
+---------------------------------
+Host:     ${DATABASE_HOST}
+Port:     ${DATABASE_PORT}
+Username: ${DATABASE_USERNAME}
+Password: ${DATABASE_PASSWORD}
+Database: ${DATABASE_NAME}
+=================================
+
+e.g. [ mysql -h ${DATABASE_HOST} -P ${DATABASE_PORT} -u ${DATABASE_USERNAME} -p${DATABASE_PASSWORD} ${DATABASE_NAME} ]
+
+HINT:
+- Run [ ${0} staging ]; You can connect staging.
+- Run [ ${0} production 55555 ]; You can specify the port number.
+"
+
+cloud_sql_proxy -instances=$GOOGLE_CLOUD_PROJECT:asia-northeast1:$SQL_INSTANCE=tcp:$DATABASE_PORT
