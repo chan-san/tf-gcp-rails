@@ -1,8 +1,9 @@
 export CLOUDSDK_ACTIVE_CONFIG_NAME=
 export GOOGLE_CLOUD_PROJECT="test-project-55555"
 export SERVICE_NAME="test-service"
+export ENV="prod"
 export TF_VAR_project_id="${GOOGLE_CLOUD_PROJECT}"
 export TF_VAR_location="asia-northeast1"
-export TF_VAR_env="prod"
+export TF_VAR_env="${ENV}"
 export TF_VAR_service_name="${SERVICE_NAME}"
 export TF_VAR_domain="test.example.com"
