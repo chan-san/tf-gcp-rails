@@ -102,14 +102,14 @@ locals {
   ssl_certificates = var.use_onetime_cert ? [
     google_compute_managed_ssl_certificate.default.self_link,
     "https://www.googleapis.com/compute/v1/projects/${var.project}/global/sslCertificates/onetime"
-  ] : [
+    ] : [
     google_compute_managed_ssl_certificate.default.self_link
   ]
 }
 resource "google_compute_target_https_proxy" "default" {
   name = "${var.service_name}-https-proxy"
 
-  url_map = google_compute_url_map.default.id
+  url_map          = google_compute_url_map.default.id
   ssl_certificates = local.ssl_certificates
 }
 

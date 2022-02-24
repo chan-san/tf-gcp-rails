@@ -15,6 +15,12 @@ resource "google_cloud_run_service" "web" {
       service_account_name = var.app_account.email
       containers {
         image = local.image
+        resources {
+          limits = {
+            "memory" : var.web_instance.memory,
+            "cpu" : var.web_instance.cpu
+          }
+        }
         env {
           name  = "RAILS_SERVE_STATIC_FILES"
           value = "1"
@@ -64,8 +70,8 @@ resource "google_cloud_run_service" "web" {
       // name = "gcp-rails-v${local.deployment_version}"
 
       annotations = {
-        "autoscaling.knative.dev/maxScale" = "100"
-        // "autoscaling.knative.dev/minScale" = "4"
+        "autoscaling.knative.dev/maxScale"        = "100"
+        "autoscaling.knative.dev/minScale"        = var.web_min_instance
         "run.googleapis.com/vpc-access-connector" = var.cloud_sql_vpc_connector.id
         "run.googleapis.com/vpc-access-egress"    = "private-ranges-only"
       }
@@ -82,6 +88,12 @@ resource "google_cloud_run_service" "worker" {
       service_account_name = var.app_account.email
       containers {
         image = local.image
+        resources {
+          limits = {
+            "memory" : var.worker_instance.memory,
+            "cpu" : var.worker_instance.cpu
+          }
+        }
         env {
           name  = "RAILS_SERVE_STATIC_FILES"
           value = "1"
@@ -129,8 +141,8 @@ resource "google_cloud_run_service" "worker" {
     }
     metadata {
       annotations = {
-        "autoscaling.knative.dev/maxScale" = "100"
-        // "autoscaling.knative.dev/minScale" = "4"
+        "autoscaling.knative.dev/maxScale"        = "100"
+        "autoscaling.knative.dev/minScale"        = var.worker_min_instance
         "run.googleapis.com/vpc-access-connector" = var.cloud_sql_vpc_connector.id
         "run.googleapis.com/vpc-access-egress"    = "private-ranges-only"
       }

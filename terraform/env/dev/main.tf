@@ -60,23 +60,25 @@ module "cloud_sql" {
 }
 
 module "storage" {
-  source       = "../../modules/storage"
-  env          = var.env
-  location     = var.location
-  project      = var.project_id
-  service_name = var.service_name
+  source             = "../../modules/storage"
+  env                = var.env
+  location           = var.location
+  project            = var.project_id
+  service_name       = var.service_name
+  deployment_account = module.service_account.deployment_account
+  app_account        = module.service_account.app_account
 }
 
 module "load_balancing" {
-  source           = "../../modules/load_balancing"
-  env              = var.env
-  location         = var.location
-  service_name     = var.service_name
-  project          = var.project_id
-  domain           = var.domain
-  buckets          = module.storage.buckets
-  cloud_run_apps   = module.cloud_run.apps
-  depends_on       = [module.google_project_service.compute]
+  source         = "../../modules/load_balancing"
+  env            = var.env
+  location       = var.location
+  service_name   = var.service_name
+  project        = var.project_id
+  domain         = var.domain
+  buckets        = module.storage.buckets
+  cloud_run_apps = module.cloud_run.apps
+  depends_on     = [module.google_project_service.compute]
   //use_onetime_cert = true
 }
 
@@ -86,7 +88,6 @@ module "cloud_run" {
   location                     = var.location
   repository_path              = module.artifact_registry.repository_path
   image_sha                    = var.image_sha
-  force                        = var.force
   app_account                  = module.service_account.app_account
   run_invoker_account          = module.service_account.run_invoker_account
   cloud_sql_vpc_connector      = module.networking.cloud_sql_vpc_connector
